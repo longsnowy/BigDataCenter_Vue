@@ -79,7 +79,19 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '城市管理局', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/useradmin',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/users/user-admin'),
+        name: 'UserAdmin',
+        meta: { title: '用户管理', icon: 'peoples', affix: true }
       }
     ]
   },

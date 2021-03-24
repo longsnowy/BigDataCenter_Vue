@@ -19,6 +19,12 @@ const componentsRouter = {
       meta: { title: 'Tinymce' }
     },
     {
+      path: 'tinymce-test',
+      component: () => import('@/views/components-demo/tinymce-test'),
+      name: 'TinymceDemo',
+      meta: { title: 'Tinymce' }
+    },
+    {
       path: 'markdown',
       component: () => import('@/views/components-demo/markdown'),
       name: 'MarkdownDemo',

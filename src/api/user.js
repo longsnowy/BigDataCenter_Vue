@@ -3,8 +3,8 @@ import request from '@/utils/request'
 export function login(data,token) {
   console.log('api' + token);
   return request({
-    //url: '/vue-element-admin/user/login',
-    url: '/api/login',
+    url: '/vue-element-admin/user/login',
+    //url: '/api/login',
     method: 'post',
     headers: {
       'Access-Token': token,

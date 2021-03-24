@@ -34,7 +34,7 @@ const actions = {
     const { status, username, password, code, token } = userInfo
     console.log('moudle' + token);
     return new Promise((resolve, reject) => {
-      login({status:status, userName: username.trim(), password: password,code:code },token).then(response => {
+      login({status:status, username: username.trim(), password: password,code:code },token).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
