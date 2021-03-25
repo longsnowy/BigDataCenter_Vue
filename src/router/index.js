@@ -96,6 +96,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/tasks',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/tasks/create'),
+        name: 'TaskCreate',
+        meta: { title: '任务发布', icon: 'documentation', affix: true }
+      }
+    ]
+  },
+  {
     path: '/documentation',
     component: Layout,
     children: [

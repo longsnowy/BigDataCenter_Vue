@@ -22,9 +22,9 @@
                  @click="handleDownload">
         导出
       </el-button>
-<!--      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">-->
-<!--        reviewer-->
-<!--      </el-checkbox>-->
+      <!--      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">-->
+      <!--        reviewer-->
+      <!--      </el-checkbox>-->
     </div>
 
     <el-table
@@ -37,7 +37,7 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="姓名"   align="center" width="80px">
+      <el-table-column label="姓名" align="center" width="80px">
         <template slot-scope="{row}">
           <span>{{ row.name }}</span>
         </template>
@@ -73,15 +73,16 @@
           <span>{{ row.department }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="个人绩效"  width="110px" align="center">
+      <el-table-column label="个人绩效" width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.score }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="选项" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="选项" align="center" width="260" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="userUpdata(row)">用户名密码</el-button>
           <el-button v-if="row.status!='删除'" size="mini" @click="handleDelete(row,$index)">删除</el-button>
         </template>
       </el-table-column>
@@ -142,6 +143,30 @@
         <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogUserVisible">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px"
+               style="width: 400px; margin-left:50px;">
+        <el-form-item label="身份证号" prop="id">
+          <el-input v-model="temp.id" disabled/>
+        </el-form-item>
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="temp.name"/>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="temp.name"/>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+          提交
+        </el-button>
+        <el-button @click="dialogUserVisible = false">
+          取消
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -190,10 +215,10 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        name:'',
+        name: '',
         sort: '绩效降序',
-        sex:'',
-        department:''
+        sex: '',
+        department: ''
       },
       sexs: ['男', '女'],
       // calendarTypeOptions,
@@ -202,20 +227,26 @@ export default {
       // showReviewer: false,
       temp: {
         name: '',
-        sex:'男',
-        id:341623200009064450,
-        politic:'党员',
-        status:'干事',
-        speciality:'团队协作',
-        department:'办公室',
-        score:88
+        sex: '男',
+        id: 341623200009064450,
+        politic: '党员',
+        status: '干事',
+        speciality: '团队协作',
+        department: '办公室',
+        score: 88
 
+      },
+      userTemp: {
+        id:'',
+        username:'',
+        password:''
       },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: '编辑',
-        create: '新增'
+        create: '新增',
+        userpass: '用户名密码'
       },
       dialogPvVisible: false,
       pvData: [],
@@ -223,6 +254,12 @@ export default {
         type: [{ required: true, message: 'type is required', trigger: 'change' }],
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+      },
+      dialogUserVisible:false,
+      userdata:{
+        id:'',
+        username:'',
+        password:''
       },
       downloadLoading: false
     }
@@ -271,13 +308,13 @@ export default {
     resetTemp() {
       this.temp = {
         name: '',
-        sex:'男',
-        id:'',
-        politic:'党员',
-        status:'干事',
-        speciality:'',
-        department:'办公室',
-        score:''
+        sex: '男',
+        id: '',
+        politic: '党员',
+        status: '干事',
+        speciality: '',
+        department: '办公室',
+        score: ''
       }
     },
     handleCreate() {
@@ -311,6 +348,14 @@ export default {
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    userUpdata(row) {
+      this.userTemp = Object.assign({}, row) // copy obj
+      this.dialogStatus = 'userpass'
+      this.dialogUserVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
@@ -352,8 +397,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['姓名', '性别', '身份证号', '政治面貌', '职位','专业特长','部门','绩效']
-        const filterVal = ['name', 'sex', 'id', 'politic', 'status','speciality','department','score']
+        const tHeader = ['姓名', '性别', '身份证号', '政治面貌', '职位', '专业特长', '部门', '绩效']
+        const filterVal = ['name', 'sex', 'id', 'politic', 'status', 'speciality', 'department', 'score']
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({
           header: tHeader,

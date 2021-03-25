@@ -18,7 +18,8 @@ import toolbar from './toolbar'
 import load from './dynamicLoadScript'
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
-const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
+// const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
+const tinymceCDN = window.location.origin + '/plugins/tinymce-all-in-one/tinymce.min.js'
 
 export default {
   name: 'Tinymce',
@@ -173,29 +174,13 @@ export default {
             formData = new FormData()
             formData.append('file', file, file.name)
             xhr.send(formData)
-
-            //下方被注释掉的是官方的一个例子
-            //放到下面给大家参考
-
-            /*var reader = new FileReader();
-            reader.onload = function () {
-                // Note: Now we need to register the blob in TinyMCEs image blob
-                // registry. In the next release this part hopefully won't be
-                // necessary, as we are looking to handle it internally.
-                var id = 'blobid' + (new Date()).getTime();
-                var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
-                var base64 = reader.result.split(',')[1];
-                var blobInfo = blobCache.create(id, file, base64);
-                blobCache.add(blobInfo);
-
-                // call the callback and populate the Title field with the file name
-                callback(blobInfo.blobUri(), { title: file.name });
-            };
-            reader.readAsDataURL(file);*/
           }
         },
         end_container_on_empty_block: true,
-        powerpaste_word_import: 'clean',
+        powerpaste_word_import: 'propmt',
+        powerpaste_html_import: 'propmt',
+        powerpaste_allow_local_images:true,
+        paste_data_images:true,
         code_dialog_height: 450,
         code_dialog_width: 1000,
         advlist_bullet_styles: 'square',
@@ -218,6 +203,30 @@ export default {
           editor.on('FullscreenStateChanged', (e) => {
             _this.fullscreen = e.state
           })
+        },
+        //copy的回调函数
+        images_upload_handler: function (blobInfo, succFun, failFun) {
+          var xhr, formData;
+          var file = blobInfo.blob();//转化为易于理解的file对象
+          xhr = new XMLHttpRequest();
+          xhr.withCredentials = false;
+          xhr.open('POST', '/api/image_upload');
+          xhr.onload = function() {
+            var json;
+            if (xhr.status != 200) {
+              failFun('HTTP Error: ' + xhr.status);
+              return;
+            }
+            json = JSON.parse(xhr.responseText);
+            if (!json || typeof json.location != 'string') {
+              failFun('Invalid JSON: ' + xhr.responseText);
+              return;
+            }
+            succFun(json.location);
+          };
+          formData = new FormData();
+          formData.append('file', file, file.name );
+          xhr.send(formData);
         },
         // it will try to keep these URLs intact
         // https://www.tiny.cloud/docs-3x/reference/configuration/Configuration3x@convert_urls/

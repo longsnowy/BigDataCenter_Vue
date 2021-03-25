@@ -36,6 +36,7 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    disableHostCheck: true,
     proxy: {
       '/api': {
         target: 'http://81.70.146.96:8080/', // 后端接口地址
