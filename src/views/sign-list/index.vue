@@ -1,19 +1,36 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.name" placeholder="姓名" style="width: 200px;" class="filter-item"
-                @keyup.enter.native="handleFilter"/>
-      <el-select v-model="listQuery.sex" placeholder="性别" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in sexs" :key="item" :label="item" :value="item"/>
+
+      <el-date-picker
+        v-model="listQuery.date"
+        align="right"
+        type="date"
+        format="yyyy-MM-dd"
+        placeholder="选择日期"
+        :picker-options="pickerOptions">
+      </el-date-picker>
+
+      <el-select v-model="listQuery.isnoon" placeholder="请选择时间段">
+        <el-option
+          v-for="item in isnoonOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
       </el-select>
-      <el-input v-model="listQuery.department" placeholder="部门" style="width: 200px;" class="filter-item"
-                @keyup.enter.native="handleFilter"/>
+
+      <el-select v-model="listQuery.state" placeholder="状态">
+        <el-option
+          v-for="item in issignedOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
-      </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                 @click="handleCreate">
-        新增
       </el-button>
 <!--      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"-->
 <!--                 @click="handleDownload">-->
@@ -34,9 +51,14 @@
           <span>{{ row.person.personName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="性别" width="60px" align="center">
+      <el-table-column label="日期" width="120px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.person.sex }}</span>
+          <span>{{ row.date }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="时间" width="120px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.time }}</span>
         </template>
       </el-table-column>
       <el-table-column label="身份证号" width="180px" align="center">
@@ -49,53 +71,39 @@
           <span>{{ row.person.politic }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="身份" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span v-if="row.status === 'admin'">局长</span>
-          <span v-if="row.status === 'fuadmin'">副局长</span>
-          <span v-if="row.status === 'useradmin'">人事管理员</span>
-          <span v-if="row.status === 'officer'">干事</span>
-          <span v-if="row.status === 'stockadmin'">股所所长</span>
-          <!--          <span>{{ row.status }}</span>-->
-        </template>
-      </el-table-column>
+
       <el-table-column label="职位" width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.person.position }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="专业特长" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.person.speciality }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="所在部门" width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.person.department.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="个人绩效" width="110px" align="center">
+      <el-table-column label="状态" width="120px" align="center">
         <template slot-scope="{row}">
-<!--          <span>{{ getPerformance(row.person.personID) }}</span>-->
-          <el-button type="primary" size="mini" @click="getPerformance(row.person.personID)">查看绩效</el-button>
+          <span v-if="row.state===0">未签到</span>
+          <span v-if="row.state===1">已签到</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="选项" align="center" width="260" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
-          <el-button type="primary" size="mini" @click="userUpdata(row)">用户名密码</el-button>
-          <el-button v-if="row.status!='删除'" size="mini" @click="handleDelete(row,$index)">删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="选项" align="center" width="260" class-name="small-padding fixed-width">-->
+<!--        <template slot-scope="{row,$index}">-->
+<!--          <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>-->
+<!--          <el-button type="primary" size="mini" @click="userUpdata(row)">用户名密码</el-button>-->
+<!--          <el-button v-if="row.status!='删除'" size="mini" @click="handleDelete(row,$index)">删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.num"
+    <pagination v-show="total>0" :total="total" :page.sync="this.pageOps.page" :limit.sync="this.pageOps.num"
                 @pagination="getList"/>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="personRules" :model="createTemp" label-position="left" label-width="90px"
+      <el-form ref="dataForm" :rules="rules" :model="createTemp" label-position="left" label-width="70px"
                style="width: 400px; margin-left:50px;">
         <el-form-item label="姓名" prop="personName">
           <el-input v-model="createTemp.personName"/>
@@ -167,7 +175,7 @@
     </el-dialog>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogUserVisible">
-      <el-form ref="dataForm" :rules="userRules" :model="temp" label-position="left" label-width="70px"
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px"
                style="width: 400px; margin-left:50px;">
         <el-form-item label="身份证号" prop="personID">
           <el-input v-model="addTemp.person.personID" disabled/>
@@ -189,24 +197,6 @@
         </el-button>
       </div>
     </el-dialog>
-
-    <el-dialog title="绩效" :visible.sync="dialogPerformanceVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="90px"
-               style="width: 400px; margin-left:50px;">
-        <el-form-item label="签到次数" prop="overSign">
-          <el-input v-model="performanceTemp.overSign" readonly/>
-        </el-form-item>
-        <el-form-item label="未签到次数" prop="notSign">
-          <el-input v-model="performanceTemp.notSign" readonly/>
-        </el-form-item>
-        <el-form-item label="完成任务数" prop="overTask">
-          <el-input v-model="performanceTemp.overTask" readonly/>
-        </el-form-item>
-        <el-form-item label="任务总数" prop="allTask">
-          <el-input v-model="performanceTemp.allTask" readonly/>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
   </div>
 </template>
 
@@ -217,11 +207,12 @@ import {
   addPerson,
   deletePerson,
   updatePerson,
-  getPerformanceById,
   fetchPv,
   createArticle,
   updateArticle
 } from '@/api/user-admin'
+
+import { sign, signedList } from '@/api/user'
 
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -253,22 +244,57 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        // limit: 20,
-        // sort: '绩效降序',
-
-        name: '',
-        sex: '',
-        department: '',
+        id: '',
+        personId: '',
+        date: '',
+        time: '',
+        isnoon: '',
+        state: '1'
+      },
+      pageOps:{
         page: 1,
         num: 20
-
       },
-      performance: '111',
       sexs: ['男', '女'],
-      // calendarTypeOptions,
-      // sortOptions: [{ label: '绩效升序', key: '+score' }, { label: '绩效降序', key: '-score' }],
-      // statusOptions: ['published', 'draft', 'deleted'],
-      // showReviewer: false,
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now()
+        },
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', new Date())
+          }
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24)
+            picker.$emit('pick', date)
+          }
+        }, {
+          text: '一周前',
+          onClick(picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', date)
+          }
+        }]
+      },
+      isnoonOptions: [{
+        value: '0',
+        label: '上午'
+      }, {
+        value: '1',
+        label: '下午'
+      }],
+      issignedOptions: [{
+        value: '1',
+        label: '已签到'
+      }, {
+        value: '0',
+        label: '未签到'
+      }],
       temp: {
         personName: '',
         sex: '男',
@@ -329,13 +355,6 @@ export default {
         password: ''
       },
       dialogFormVisible: false,
-      performanceTemp:{
-        allTask:undefined,
-        overTask:undefined,
-        overSign:undefined,
-        notSign:undefined
-      },
-      dialogPerformanceVisible:false,
       dialogStatus: '',
       textMap: {
         update: '编辑',
@@ -348,24 +367,6 @@ export default {
         type: [{ required: true, message: 'type is required', trigger: 'change' }],
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
-      },
-      personRules:{
-        personName:[{ required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }],
-        sex:[{ required: true, message: '请选择性别', trigger: 'change' }],
-        personID:[{ required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 16, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur' }],
-        politic:[
-          { required: true, message: '请输入', trigger: 'change' }
-        ],
-        department:[{ required: true, message: '请选择部门', trigger: 'change' }],
-        // status:[ { required: true, message: '请选择', trigger: 'change' }],
-        position:[{ required: true, message: '请选择性别', trigger: 'blur' }],
-        speciality:[{ required: true, message: '请输入', trigger: 'blur' }]
-      },
-      userRules:{
-        username: [ { min: 5, max: 16, message: '长度在 5 到 16 个字符', trigger: 'blur' }],
-        password: [{ min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }]
       },
       dialogUserVisible: false,
       userdata: {
@@ -383,11 +384,10 @@ export default {
   methods: {
     getList() {
       this.listLoading = false
-      getUsers(this.listQuery).then(response => {
+      signedList(this.listQuery,this.pageOps).then(response => {
         this.list = response.data.items
         // console.log(this.list)
         this.total = response.data.total
-
         // Just to simulate the time of the request
         setTimeout(() => {
           this.listLoading = false
@@ -406,24 +406,8 @@ export default {
         }, 1.5 * 1000)
       })
     },
-    getPerformance(personID) {
-      getPerformanceById(personID).then(response => {
-        // task = '任务: ' + response.data.overTask + '/' + response.data.allTask + '  '
-        // sign = '签到次数: ' + response.data.overSign + '  '
-        // sign2 = '未签到次数: ' + response.data.notSign + '  '
-        //
-        // console.log(task + sign + sign2)
-        // this.performance = task + sign + sign2
-        this.performanceTemp.allTask = response.data.allTask
-        this.performanceTemp.overTask = response.data.overTask
-        this.performanceTemp.overSign = response.data.overSign
-        this.performanceTemp.notSign = response.data.notSign
-      })
-
-      this.dialogPerformanceVisible = true;
-    },
     handleFilter() {
-      this.listQuery.page = 1
+      this.page = 1
       this.getList()
     },
     handleModifyStatus(row, status) {
@@ -507,8 +491,6 @@ export default {
       this.createTemp.speciality = row.person.speciality
       this.createTemp.department = row.person.department.id
 
-      // this.createTemp.department = this.createTemp.department.id
-      // console.log(row.person.department)
       this.temp.status = row.status
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -528,7 +510,7 @@ export default {
       var vm = this
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updatePerson(this.createTemp, this.temp.status).then(() => {
+          updatePerson(this.createTemp).then(() => {
             const index = this.list.findIndex(v => v.id === this.createTemp.personID)
             this.list.splice(index, 1, this.createTemp)
             this.dialogFormVisible = false
@@ -571,21 +553,20 @@ export default {
         this.dialogPvVisible = true
       })
     },
-    // handleDownload() {
-    //   this.downloadLoading = true
-    //   import('@/vendor/Export2Excel').then(excel => {
-    //     const tHeader = ['姓名', '性别', '身份证号', '政治面貌', '职位', '专业特长', '部门']
-    //     const filterVal = ['personName', 'sex', 'personID', 'politic', 'status', 'speciality', 'department']
-    //     // const data = this.formatJson(filterVal)
-    //     const data = this.list
-    //     excel.export_json_to_excel({
-    //       header: tHeader,
-    //       data,
-    //       filename: 'table-list'
-    //     })
-    //     this.downloadLoading = false
-    //   })
-    // },
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['姓名', '身份证号', '日期', '时间', '状态']
+        const filterVal = ['person.personName', 'person.personID', 'date', 'time', 'status']
+        const data = this.formatJson(filterVal,this.list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'table-list'
+        })
+        this.downloadLoading = false
+      })
+    },
     formatJson(filterVal) {
       return this.list.map(v => filterVal.map(j => {
         if (j === 'timestamp') {
@@ -595,10 +576,6 @@ export default {
         }
       }))
     }
-    // getSortClass: function(key) {
-    //   const sort = this.listQuery.sort
-    //   return sort === `+${key}` ? 'ascending' : 'descending'
-    // }
   }
 }
 </script>

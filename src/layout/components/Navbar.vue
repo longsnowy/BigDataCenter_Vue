@@ -1,19 +1,23 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"
+               @toggleClick="toggleSideBar"/>
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <breadcrumb id="breadcrumb-container" class="breadcrumb-container"/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
+        <!--        <search id="header-search" class="right-menu-item" />-->
+        <error-log class="errLog-container right-menu-item hover-effect"/>
 
-        <error-log class="errLog-container right-menu-item hover-effect" />
+        <el-button plain size="mini" type="primary" class="sign_button"
+                   @click="signIn()">签到
+        </el-button>
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <screenfull id="screenfull" class="right-menu-item hover-effect"/>
 
         <el-tooltip content="Global Size" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
+          <size-select id="size-select" class="right-menu-item hover-effect"/>
         </el-tooltip>
 
       </template>
@@ -21,14 +25,14 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/profile/index">
-            <el-dropdown-item>Profile</el-dropdown-item>
+            <el-dropdown-item>个人信息</el-dropdown-item>
           </router-link>
           <router-link to="/">
-            <el-dropdown-item>Dashboard</el-dropdown-item>
+            <el-dropdown-item>主页</el-dropdown-item>
           </router-link>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
             <el-dropdown-item>Github</el-dropdown-item>
@@ -37,7 +41,7 @@
             <el-dropdown-item>Docs</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -47,12 +51,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { sign } from '@/api/user'
+
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
+
 
 export default {
   components: {
@@ -77,18 +84,44 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    signIn(){
+      var vm = this;
+      sign().then(response => {
+
+        vm.$notify({
+          title: '成功',
+          message: '签到成功',
+          type: 'success',
+          duration: 2000
+
+        })
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
+
 .navbar {
   height: 50px;
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+
+  .sign_button {
+    //display: inline-block;
+    //padding: 0 8px;
+    //height: 60%;
+    //font-size: 15px;
+    //color: #5a5e66;
+    vertical-align: text-bottom;
+    margin-bottom: 11px;
+    margin-right: 5px;
+  }
 
   .hamburger-container {
     line-height: 46px;
@@ -96,7 +129,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)

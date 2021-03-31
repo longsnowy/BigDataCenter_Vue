@@ -1,9 +1,9 @@
 <template>
   <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
     <textarea :id="tinymceId" class="tinymce-textarea"/>
-    <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>
-    </div>
+<!--    <div class="editor-custom-btn-container">-->
+<!--      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -16,10 +16,13 @@ import editorImage from './components/EditorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
 import load from './dynamicLoadScript'
+import { getToken } from '@/utils/auth'
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
 // const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
 const tinymceCDN = window.location.origin + '/plugins/tinymce-all-in-one/tinymce.min.js'
+// const tinymceCDN = window.location.origin + '/dist/plugins/tinymce-all-in-one/tinymce.min.js'
+
 
 export default {
   name: 'Tinymce',
@@ -158,6 +161,8 @@ export default {
             xhr = new XMLHttpRequest()
             xhr.withCredentials = false
             xhr.open('POST', upurl)
+            //todo
+            xhr.setRequestHeader('Admin-Token',getToken())
             xhr.onload = function() {
               var json
               if (xhr.status != 200) {
@@ -211,6 +216,7 @@ export default {
           xhr = new XMLHttpRequest();
           xhr.withCredentials = false;
           xhr.open('POST', '/api/image_upload');
+          xhr.setRequestHeader('Admin-Token',getToken())
           xhr.onload = function() {
             var json;
             if (xhr.status != 200) {

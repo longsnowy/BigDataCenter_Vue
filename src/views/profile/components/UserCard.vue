@@ -1,7 +1,7 @@
 <template>
   <el-card style="margin-bottom:20px;">
     <div slot="header" class="clearfix">
-      <span>About me</span>
+      <span>关于我</span>
     </div>
 
     <div class="user-profile">
@@ -15,6 +15,7 @@
         <div class="user-name text-center">{{ user.name }}</div>
         <div class="user-role text-center text-muted">{{ user.role | uppercaseFirst }}</div>
       </div>
+
     </div>
 
     <div class="user-bio">

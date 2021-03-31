@@ -24,7 +24,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: './',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
@@ -39,15 +39,15 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'http://81.70.146.96:8080/', // 后端接口地址
+        target: 'http://localhost:8080/', // 后端接口地址
         changeOrigin: true, // 是否允许跨越
         ws: true,
         pathRewrite: {
           '^/api': '/Spring_Web_exploded'// 重写,
         }
       }
-    },
-     before: require('./mock/mock-server.js')
+    }
+     // before: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

@@ -28,7 +28,7 @@
           <!--          <el-tag type="success" v-for="receiver in scope.row.recipients">{{ receiver }}</el-tag>-->
           <span v-for="receiver in scope.row.recipients">
             <span v-for="person in userListOptions">
-              <el-button plain size="mini" type="primary" style="margin-top: 5px" v-if="receiver===person.personID"
+              <el-button plain size="mini" type="primary" v-if="receiver===person.personID"
                          @click="showUserInfo(person)">{{ person.personName }}</el-button>
             </span>
           </span>
@@ -71,16 +71,11 @@
 
       <el-table-column align="center" label="操作" width="300">
         <template slot-scope="scope">
-          <router-link :to="'/tasks/edit/'+scope.row.id" style="margin-right: 10px">
-            <el-button type="primary" size="small" icon="el-icon-edit">
-              编辑
-            </el-button>
-          </router-link>
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="showTask(scope.row.text)">
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="showTask(scope.row.text)" style="margin-right: 10px">
             查看
           </el-button>
-          <el-button type="primary" size="small" icon="el-icon-edit" @click="deleteTask(scope.row.id)">
-            删除
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="updateTap(scope.row)">
+            完成
           </el-button>
         </template>
       </el-table-column>
@@ -145,7 +140,7 @@
 
 <script>
 import { fetchList } from '@/api/user-admin'
-import { getTasks, deleteTaskById } from '@/api/task-admin'
+import { getSelfTasks, deleteTaskById,updateTask } from '@/api/task-admin'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -186,6 +181,12 @@ export default {
         page: 1,
         num: 200
       },
+      tapTemp:{
+        ID:'',
+        taskId:'',
+        recipientId:'',
+        state:1
+      },
       dialogFormVisible: false,
       infoTemp: {
         personName: '',
@@ -212,9 +213,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = false
-      getTasks(this.listQuery, this.page, this.num).then(response => {
+      getSelfTasks(this.listQuery, this.page, this.num).then(response => {
         this.list = response.data.items
-        this.total = response.data.total
+        // this.total = response.data.total
         this.listLoading = false
       })
     },
@@ -224,6 +225,18 @@ export default {
         this.userListOptions = response.data.items
         // console.log(this.userListOptions)
         // console.log(this.list)
+      })
+    },
+    updateTap(row) {
+      var vm = this;
+      this.tapTemp.taskId = row.id;
+      updateTask(this.tapTemp).then(response => {
+        vm.$notify({
+          title: '成功',
+          message: '更新成功',
+          type: 'success',
+          duration: 2000
+        })
       })
     },
     showUserInfo(person) {
