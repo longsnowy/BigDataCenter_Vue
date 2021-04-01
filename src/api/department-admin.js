@@ -16,7 +16,7 @@ export function createDepartment(data) {
 }
 export function deleteDepartment(id) {
   return request({
-    url: '/person/delete',
+    url: '/department/delete',
     method: 'post',
     params:{
       id:id

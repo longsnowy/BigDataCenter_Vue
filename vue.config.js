@@ -39,7 +39,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080/', // 后端接口地址
+        target: 'http://81.70.146.96:8080/', // 后端接口地址
         changeOrigin: true, // 是否允许跨越
         ws: true,
         pathRewrite: {

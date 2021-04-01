@@ -15,10 +15,10 @@
                  @click="handleCreate">
         新增
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"
-                 @click="handleDownload">
-        导出
-      </el-button>
+<!--      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"-->
+<!--                 @click="handleDownload">-->
+<!--        导出-->
+<!--      </el-button>-->
     </div>
 
     <el-table

@@ -85,7 +85,7 @@
       <el-table-column label="选项" align="center" width="260" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
-          <el-button type="primary" size="mini" @click="userUpdata(row)">用户名密码</el-button>
+          <el-button type="primary" size="mini" @click="userPasss(row)">用户名密码</el-button>
           <el-button v-if="row.status!='删除'" size="mini" @click="handleDelete(row,$index)">删除</el-button>
         </template>
       </el-table-column>
@@ -170,18 +170,18 @@
       <el-form ref="dataForm" :rules="userRules" :model="temp" label-position="left" label-width="70px"
                style="width: 400px; margin-left:50px;">
         <el-form-item label="身份证号" prop="personID">
-          <el-input v-model="addTemp.person.personID" disabled/>
+          <el-input v-model="userTemp.id" disabled/>
         </el-form-item>
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="addTemp.userName"/>
+          <el-input v-model="userTemp.userName"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="addTemp.password"/>
+          <el-input v-model="userTemp.password"/>
         </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+        <el-button type="primary" @click="userUpdata()">
           提交
         </el-button>
         <el-button @click="dialogUserVisible = false">
@@ -212,15 +212,13 @@
 
 <script>
 import {
-  fetchList,
   getUsers,
   addPerson,
   deletePerson,
   updatePerson,
+  updatUser,
   getPerformanceById,
-  fetchPv,
-  createArticle,
-  updateArticle
+  fetchPv
 } from '@/api/user-admin'
 
 import waves from '@/directive/waves' // waves directive
@@ -298,6 +296,12 @@ export default {
         password: '',
         status: 'admin'
       },
+      userTemp:{
+        userName:'',
+        password:'',
+        id:'',
+        status:''
+      },
       createTemp: {
         personName: '',
         sex: '男',
@@ -323,11 +327,11 @@ export default {
         value: 'stockadmin',
         label: '股所所长'
       }],
-      userTemp: {
-        personID: '',
-        username: '',
-        password: ''
-      },
+      // userTemp: {
+      //   personID: '',
+      //   username: '',
+      //   password: ''
+      // },
       dialogFormVisible: false,
       performanceTemp:{
         allTask:undefined,
@@ -360,7 +364,7 @@ export default {
         ],
         department:[{ required: true, message: '请选择部门', trigger: 'change' }],
         // status:[ { required: true, message: '请选择', trigger: 'change' }],
-        position:[{ required: true, message: '请选择性别', trigger: 'blur' }],
+        position:[{ required: true, message: '请输入', trigger: 'blur' }],
         speciality:[{ required: true, message: '请输入', trigger: 'blur' }]
       },
       userRules:{
@@ -516,13 +520,31 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    userUpdata(row) {
-      this.addTemp = Object.assign({}, row) // copy obj
-      this.dialogStatus = 'userpass'
+    userPasss(row){
+      this.userTemp.userName = row.userName
+      this.userTemp.password = row.password
+      this.userTemp.id = row.person.personID
+      this.userTemp.status = row.status
       this.dialogUserVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+    },
+    userUpdata() {
+      var vm = this
+
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          updatUser(this.userTemp).then(() => {
+
+            vm.$notify({
+              title: '成功',
+              message: '编辑成功',
+              type: 'success',
+              duration: 2000
+            })
+
+          })
+        }
       })
+
     },
     updateData() {
       var vm = this

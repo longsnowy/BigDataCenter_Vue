@@ -45,42 +45,19 @@ export function getPerformanceById(Id) {
   })
 }
 
-export function updatePerson(data,status) {
+export function updatePerson(data) {
   return request({
-    url: "/person/update?status=" + data.status,
+    url: "/person/update",
     method: 'post',
     data
   })
 }
 
-export function fetchArticle(id) {
+export function updatUser(data) {
   return request({
-    url: '/vue-element-admin/users/detail',
-    method: 'get',
-    params: { id }
-  })
-}
-
-export function fetchPv(pv) {
-  return request({
-    url: '/vue-element-admin/users/pv',
-    method: 'get',
-    params: { pv }
-  })
-}
-
-export function createArticle(data) {
-  return request({
-    url: '/vue-element-admin/users/create',
+    url: "/user/revise",
     method: 'post',
     data
   })
 }
 
-export function updateArticle(data) {
-  return request({
-    url: '/vue-element-admin/users/update',
-    method: 'post',
-    data
-  })
-}

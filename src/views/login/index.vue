@@ -16,7 +16,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="请输入用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -33,7 +33,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="请输入密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -87,8 +87,8 @@ export default {
     return {
       loginForm: {
         status: '',
-        username: '123456',
-        password: '123456',
+        username: '',
+        password: '',
         code: '',
         token: ''
       },
@@ -96,7 +96,7 @@ export default {
         status: [{ required: true, message: '请选择身份', trigger: 'change' }],
         username: [{ required: true,  message: '请输入用户名',trigger: 'blur'}, { min: 5, max: 16, message: '长度在 5 到 16 个字符', trigger: 'blur' }],
         password: [{ required: true, message: '请输入密码',trigger: 'blur'}, { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }],
-        code:[{ required: true,message: '请输入验证码', trigger: 'blur' }, { min: 5, max: 16, message: '长度为4个字符', trigger: 'blur' }]
+        code:[{ required: true,message: '请输入验证码', trigger: 'blur' }, { min: 4, max: 4, message: '长度为4个字符', trigger: 'blur' }]
       },
       options: [{
         value: 'admin',
@@ -145,19 +145,17 @@ export default {
     },
     changeCaptchaUrl: function() {
       var vm = this
-      // {
-      //   method: 'get',
-      //     url: 'http://81.70.146.96:8080/Spring_Web_exploded/getcode',
-      //   responseType: 'blob',
-      //   //headers: {'Access-Token': vm.token}
-      // }
-      getCode().then(function(response) {
+      this.axios({
+        method: 'get',
+        url: 'http://81.70.146.96:8080/Spring_Web_exploded/getcode',
+        responseType: 'blob'
+        //headers: {'Access-Token': vm.token}
+      }).then(function(response) {
         var img = vm.$refs.codeImg
         let url = window.URL.createObjectURL(response.data)
         img.src = url
         //取得后台通过响应头返回的sessionId的值
         vm.loginForm.token = response.headers['access-token']
-
         // console.log(response.headers)
         // console.log('function111' + vm.loginForm.token)
       })
@@ -176,10 +174,14 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('error submit!!')
+          console.log('登陆失败')
+          // vm.changeCaptchaUrl()
           return false
         }
+        vm.changeCaptchaUrl()
+        console.log(11111)
       })
+
     }
   }
 }

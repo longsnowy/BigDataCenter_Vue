@@ -82,42 +82,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/useradmin',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/users/user-admin'),
-        name: 'UserAdmin',
-        meta: { title: '用户管理', icon: 'peoples', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/departmentadmin',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/department/department-admin'),
-        name: 'DepartmentAdmin',
-        meta: { title: '部门管理', icon: 'component', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/tasks-create',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/tasks/create'),
-        name: 'TaskCreate',
-        meta: { title: '任务发布', icon: 'documentation', affix: true }
-      }
-    ]
-  },
+
   {
     path: '/tasks-self',
     component: Layout,
@@ -138,42 +103,12 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/sign-list'),
         name: 'SelfTasks',
-        meta: { title: '签到情况', icon: 'documentation', affix: true }
+        meta: { title: '签到情况', icon: 'edit', affix: true }
       }
     ]
   },
 
-  {
-    path: '/tasks',
-    component: Layout,
-    redirect: '/tasks/list',
-    name: 'Tasks',
-    meta: {
-      title: '任务',
-      icon: 'el-icon-s-help'
-    },
-    children: [
-      {
-        path: 'create',
-        component: () => import('@/views/tasks/create'),
-        name: 'CreateArticle',
-        meta: { title: '任务发布', icon: 'edit' }
-      },
-      {
-        path: 'edit/:id(\\d+)',
-        component: () => import('@/views/tasks/edit'),
-        name: 'EditArticle',
-        meta: { title: '任务编辑', noCache: true, activeMenu: '/tasks/list' },
-        hidden: true
-      },
-      {
-        path: 'list',
-        component: () => import('@/views/tasks/list'),
-        name: 'ArticleList',
-        meta: { title: '任务列表', icon: 'list' }
-      }
-    ]
-  },
+
   // {
   //   path: '/documentation',
   //   component: Layout,
@@ -203,7 +138,6 @@ export const constantRoutes = [
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
-    hidden: true,
     children: [
       {
         path: 'index',
@@ -220,8 +154,81 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  // {
+  //   path: '/tasksList',
+  //   component: Layout,
+  //   meta: {
+  //     roles:['admin']
+  //   },
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/tasks/list'),
+  //       name: 'TaskList',
+  //       meta: {
+  //         title: '全部任务',
+  //         icon: 'documentation',
+  //         roles:['admin'],
+  //         affix: true
+  //       }
+  //     }
+  //   ]
+  // },
   {
-    path: '/tasksList',
+    path: '/tasks',
+    component: Layout,
+    redirect: '/tasks/list',
+    name: 'Tasks',
+    meta: {
+      title: '任务',
+      icon: 'el-icon-s-help',
+        roles:['admin','fuadmin','stockadmin']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/tasks/self-list'),
+        name: 'SelfTasks',
+        meta: { title: '个人任务', icon: 'documentation', affix: true }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/tasks/create'),
+        name: 'CreateArticle',
+        meta: { title: '任务发布', icon: 'edit' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/tasks/edit'),
+        name: 'EditArticle',
+        meta: { title: '任务编辑', noCache: true, activeMenu: '/tasks/list' },
+        hidden: true
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/tasks/list'),
+        name: 'ArticleList',
+        meta: { title: '任务列表', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/useradmin',
+    component: Layout,
+    meta: {
+      roles:['admin','useradmin']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/users/user-admin'),
+        name: 'UserAdmin',
+        meta: { title: '用户管理', icon: 'peoples', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/departmentadmin',
     component: Layout,
     meta: {
       roles:['admin']
@@ -229,17 +236,27 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/tasks/list'),
-        name: 'TaskList',
-        meta: {
-          title: '全部任务',
-          icon: 'documentation',
-          roles:['admin'],
-          affix: true
-        }
+        component: () => import('@/views/department/department-admin'),
+        name: 'DepartmentAdmin',
+        meta: { title: '部门管理', icon: 'component', affix: true }
       }
     ]
   },
+  // {
+  //   path: '/tasks-create',
+  //   component: Layout,
+  //   meta: {
+  //     roles:['admin','fuadmin','stockadmin']
+  //   },
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/tasks/create'),
+  //       name: 'TaskCreate',
+  //       meta: { title: '任务发布', icon: 'documentation', affix: true }
+  //     }
+  //   ]
+  // },
   // {
   //   path: '/permission',
   //   component: Layout,

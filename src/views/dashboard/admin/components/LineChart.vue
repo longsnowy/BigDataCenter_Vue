@@ -1,9 +1,10 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{height:height,width:width}"/>
 </template>
 
 <script>
 import echarts from 'echarts'
+
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
 
@@ -61,72 +62,53 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
+
     setOptions({ expectedData, actualData } = {}) {
+      console.log(expectedData)
       this.chart.setOption({
-        xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          boundaryGap: false,
-          axisTick: {
-            show: false
-          }
+        title: {
+          text: '信息统计',
+          left: 'left',
         },
-        grid: {
-          left: 10,
-          right: 10,
-          bottom: 20,
-          top: 30,
-          containLabel: true
+        // 工具箱
+        toolbox: {
+          show: true,
+          feature: {
+            saveAsImage: {
+              show: true
+            },
+            restore: {
+              show: true
+            },
+            dataView: {
+              show: true
+            },
+            dataZoom: {
+              show: true
+            },
+            magicType: {
+              type: ['line', 'bar']
+            }
+
+          }
         },
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          },
-          padding: [5, 10]
+          trigger: 'axis'
         },
-        yAxis: {
-          axisTick: {
-            show: false
-          }
-        },
+        // 图例
         legend: {
-          data: ['expected', 'actual']
+          data: ['信息统计']
         },
+        // x轴
+        xAxis: {
+          data: ['签到人数', '未签人数', '任务完成数', '任务总数']
+        },
+        yAxis: {},
+        // 数据
         series: [{
-          name: 'expected', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
-          smooth: true,
-          type: 'line',
+          name: '信息统计',
+          type: 'bar',
           data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
         }]
       })
     }
