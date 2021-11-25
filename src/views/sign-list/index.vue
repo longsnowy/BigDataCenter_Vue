@@ -181,7 +181,7 @@
           <el-input v-model="addTemp.person.personID" disabled/>
         </el-form-item>
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="addTemp.userName"/>
+          <el-input v-model="addTemp.username"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="addTemp.password"/>
@@ -320,7 +320,7 @@ export default {
           },
           speciality: '团队协作'
         },
-        userName: '',
+        username: '',
         password: '',
         status: 'admin'
       },
@@ -438,7 +438,7 @@ export default {
           department: '',
           speciality: ''
         },
-        userName: '',
+        username: '',
         password: '',
         status: ''
       }

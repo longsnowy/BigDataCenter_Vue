@@ -1,5 +1,5 @@
 module.exports = {
-  title: '城市管理局',
+  title: '数据中心',
 
   /**
    * @type {boolean} true | false

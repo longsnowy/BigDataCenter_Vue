@@ -2,13 +2,13 @@
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
-        <h3 class="title">城市管理局</h3>
+        <h3 class="title">数据中心</h3>
       </div>
-      <el-form-item label="" prop="status">
+      <!-- <el-form-item label="" prop="status">
         <el-select v-model="loginForm.status" placeholder="请选择身份" style="width:100%">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -43,21 +43,21 @@
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
-
+<!--
       <el-form-item label="" prop="code">
         <el-input v-model="loginForm.code" placeholder="请输入验证码"></el-input>
         <div class="identifybox">
           <img slot="suffix" class="verificationCode" @click="changeCaptchaUrl" ref="codeImg">
           <el-button @click="changeCaptchaUrl" type='text' class="textbtn">看不清，换一张</el-button>
         </div>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
-      <div class="tips">
+      <!-- <div class="tips">
         <span style="margin-right:20px;">账号: 请找人事管理员获取账号</span>
         <span> 初始密码: 000000</span>
-      </div>
+      </div> -->
 
     </el-form>
   </div>
@@ -86,34 +86,34 @@ export default {
     }
     return {
       loginForm: {
-        status: '',
-        username: '',
-        password: '',
-        code: '',
-        token: ''
+        status: 'admin',
+        username: 'admin',
+        password: 'admin',
+        // code: '',
+        // token: ''
       },
       loginRules: {
-        status: [{ required: true, message: '请选择身份', trigger: 'change' }],
+        // status: [{ required: true, message: '请选择身份', trigger: 'change' }],
         username: [{ required: true,  message: '请输入用户名',trigger: 'blur'}, { min: 5, max: 16, message: '长度在 5 到 16 个字符', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码',trigger: 'blur'}, { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }],
-        code:[{ required: true,message: '请输入验证码', trigger: 'blur' }, { min: 4, max: 4, message: '长度为4个字符', trigger: 'blur' }]
+        password: [{ required: true, message: '请输入密码',trigger: 'blur'}, { min: 5, max: 16, message: '长度在 5 到 16 个字符', trigger: 'blur' }],
+        // code:[{ required: true,message: '请输入验证码', trigger: 'blur' }, { min: 4, max: 4, message: '长度为4个字符', trigger: 'blur' }]
       },
-      options: [{
-        value: 'admin',
-        label: '局长'
-      }, {
-        value: 'fuadmin',
-        label: '副局长'
-      }, {
-        value: 'officer',
-        label: '干事'
-      }, {
-        value: 'useradmin',
-        label: '人事admin'
-      }, {
-        value: 'stockadmin',
-        label: '股所所长'
-      }],
+      // options: [{
+      //   value: 'admin',
+      //   label: '局长'
+      // }, {
+      //   value: 'fuadmin',
+      //   label: '副局长'
+      // }, {
+      //   value: 'officer',
+      //   label: '干事'
+      // }, {
+      //   value: 'useradmin',
+      //   label: '人事admin'
+      // }, {
+      //   value: 'stockadmin',
+      //   label: '股所所长'
+      // }],
       value: '',
       token: '',
       loading: false,
@@ -130,7 +130,7 @@ export default {
     }
   },
   mounted() {
-    this.changeCaptchaUrl()
+    // this.changeCaptchaUrl()
   },
   methods: {
     showPwd() {
@@ -143,42 +143,43 @@ export default {
         this.$refs.password.focus()
       })
     },
-    changeCaptchaUrl: function() {
-      var vm = this
-      this.axios({
-        method: 'get',
-        url: 'http://81.70.146.96:8080/Spring_Web_exploded/getcode',
-        responseType: 'blob'
-        //headers: {'Access-Token': vm.token}
-      }).then(function(response) {
-        var img = vm.$refs.codeImg
-        let url = window.URL.createObjectURL(response.data)
-        img.src = url
-        //取得后台通过响应头返回的sessionId的值
-        vm.loginForm.token = response.headers['access-token']
-        // console.log(response.headers)
-        // console.log('function111' + vm.loginForm.token)
-      })
-      // console.log(vm.token)
-    },
+    // changeCaptchaUrl: function() {
+    //   var vm = this
+    //   this.axios({
+    //     method: 'get',
+    //     url: 'http://localhost:8080/Spring_Web_exploded/getcode',
+    //     responseType: 'blob'
+    //     //headers: {'Access-Token': vm.token}
+    //   }).then(function(response) {
+    //     var img = vm.$refs.codeImg
+    //     let url = window.URL.createObjectURL(response.data)
+    //     img.src = url
+    //     //取得后台通过响应头返回的sessionId的值
+    //     vm.loginForm.token = response.headers['access-token']
+    //     // console.log(response.headers)
+    //     // console.log('function111' + vm.loginForm.token)
+    //   })
+    //   // console.log(vm.token)
+    // },
     handleLogin() {
       var vm = this;
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          // console.log('handleLogin' + vm.token);
+          console.log('handleLogin');
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
-            this.loading = false
+            // this.loading =
+            //   vm.changeCaptchaUrl()
           })
         } else {
           console.log('登陆失败')
           // vm.changeCaptchaUrl()
           return false
         }
-        vm.changeCaptchaUrl()
+
         console.log(11111)
       })
 

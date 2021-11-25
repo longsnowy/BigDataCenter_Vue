@@ -24,14 +24,15 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: './',
+  publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',
+  // lintOnSave: process.env.NODE_ENV === 'development',
+  lintOnSave: false,
   productionSourceMap: false,
   devServer: {
     port: port,
-    open: true,
+    open: false,
     overlay: {
       warnings: false,
       errors: true
@@ -39,11 +40,11 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'http://81.70.146.96:8080/', // 后端接口地址
+        target: 'http://localhost:8080/', // 后端接口地址
         changeOrigin: true, // 是否允许跨越
         ws: true,
         pathRewrite: {
-          '^/api': '/Spring_Web_exploded'// 重写,
+          '^/api': ''// 重写,
         }
       }
     }

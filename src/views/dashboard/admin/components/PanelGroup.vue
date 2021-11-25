@@ -7,32 +7,32 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            成员管理
+            角色管理
           </div>
 <!--          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />-->
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="toPath('/tasks/list')">
+      <div class="card-panel" @click="toPath('/datasource')">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="documentation" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            任务清单
+            数据源管理
           </div>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="toPath('/departmentadmin/index')">
+      <div class="card-panel" @click="toPath('/upload-excel')">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="component" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            部门列表
+            导入数据源
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            签到情况
+            表关联分析
           </div>
         </div>
       </div>

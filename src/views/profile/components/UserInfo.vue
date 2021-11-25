@@ -4,7 +4,7 @@
       <el-input :value="info.status|statusFilter" readonly/>
     </el-form-item>
     <el-form-item label="用户名">
-      <el-input v-model.trim="info.userName"/>
+      <el-input v-model.trim="info.username"/>
     </el-form-item>
     <el-form-item label="密码">
       <el-input v-model.trim="info.password"/>
@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       userTemp: {
-        userName: '',
+        username: '',
         password: '',
         id: '',
         status: ''
@@ -54,7 +54,7 @@ export default {
   methods: {
     submit() {
       this.userTemp = {
-        userName: this.info.userName,
+        username: this.info.username,
         password: this.info.password,
         id: this.info.person.personID,
         status: this.info.status

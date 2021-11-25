@@ -173,7 +173,7 @@
           <el-input v-model="userTemp.id" disabled/>
         </el-form-item>
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="userTemp.userName"/>
+          <el-input v-model="userTemp.username"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="userTemp.password"/>
@@ -292,12 +292,12 @@ export default {
           },
           speciality: '团队协作'
         },
-        userName: '',
+        username: '',
         password: '',
         status: 'admin'
       },
       userTemp:{
-        userName:'',
+        username:'',
         password:'',
         id:'',
         status:''
@@ -458,7 +458,7 @@ export default {
           department: '',
           speciality: ''
         },
-        userName: '',
+        username: '',
         password: '',
         status: ''
       }
@@ -521,7 +521,7 @@ export default {
       })
     },
     userPasss(row){
-      this.userTemp.userName = row.userName
+      this.userTemp.username = row.username
       this.userTemp.password = row.password
       this.userTemp.id = row.person.personID
       this.userTemp.status = row.status

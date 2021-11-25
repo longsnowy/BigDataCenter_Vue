@@ -1,14 +1,14 @@
 import request from '@/utils/request'
 import { getToken } from '@/utils/auth'
 
-export function login(data,token) {
+export function login(data) {
   // console.log('api' + token);
   return request({
     //url: '/vue-element-admin/user/login',
     url: '/login',
     method: 'post',
     headers: {
-      'Access-Token': token,
+      // 'Access-Token': token,
       'Content-Type': 'application/json;charset=UTF-8'
     },
     data
@@ -25,7 +25,7 @@ export function getCode() {
 
 export function getInfo(token) {
   return request({
-    url: '/user/info',
+    url: '/info',
     method: 'get',
     params: { token }
   })

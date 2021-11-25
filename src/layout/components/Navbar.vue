@@ -8,7 +8,7 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <!--        <search id="header-search" class="right-menu-item" />-->
-        <error-log class="errLog-container right-menu-item hover-effect"/>
+<!--        <error-log class="errLog-container right-menu-item hover-effect"/>-->
 
         <el-button plain size="mini" type="primary" class="sign_button"
                    @click="signIn()">签到
