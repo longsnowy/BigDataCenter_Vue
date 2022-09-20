@@ -11,6 +11,22 @@
       <el-table-column v-for="item of tableHeader" :key="item" :prop="item" :label="item"/>
     </el-table>
 
+    <el-dialog :title="编辑" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" :rules="infoRules" :model="beginIndex" label-position="left" label-width="150px"
+               style="width: 400px; margin-left:50px;">
+        <el-form-item label="数据开始行数" prop="field">
+          <el-input v-model="beginIndex"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitTable()">
+          提交
+        </el-button>
+        <el-button @click="dialogFormVisible = false">
+          取消
+        </el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -28,7 +44,9 @@ export default {
       tableHeader: [],
       file: undefined,
       filrurl: '',
-      dictionary: []
+      dictionary: [],
+      beginIndex:1,
+      dialogFormVisible:false
     }
   },
   mounted() {
@@ -38,7 +56,11 @@ export default {
     beforeUpload(file) {
       const isLt1M = file.size / 1024 / 1024 < 100
       this.file = file
-      this.test(file)
+
+      this.dialogFormVisible = true
+
+      // this.test(file)
+
       if (isLt1M) {
         return true
       }
@@ -67,7 +89,7 @@ export default {
       formdata.append('title', '')
       formdata.append('url', '')
       console.log(file)
-      this.axios.post('api/addfromexcel/' + vm.$route.params.id, formdata, {
+      this.axios.post('api/addfromexcel/' + vm.$route.params.id + '/' + vm.beginIndex, formdata, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -86,13 +108,18 @@ export default {
               message: '文件格式错误'
             })
           }
+
+          vm.dialogFormVisible = false
         })
       console.log(response)
     },
     handleSuccess({ results, header }) {
       this.tableData = results
       this.tableHeader = header
-
+    },
+    submitTable(){
+      this.test(this.file)
+      this.dialogFormVisible = false
     }
   }
 }

@@ -6,11 +6,22 @@
     <el-button type="primary" size="mini" @click="addFromExcel()">从excel导入数据</el-button>
     <el-button type="primary" size="mini" @click="getdic()">查看数据字典</el-button>
     <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-      <el-table-column v-for="item of tableHeader" :key="item" :prop="item" :label="item"/>
+      <el-table-column :show-overflow-tooltip="true" v-for="item of tableHeader" :key="item" :prop="item" :label="item"/>
     </el-table>
 
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="listQuery.num"
+      :page-sizes="[10,20,50, 100, 200, 300, 400]"
+      :page-size="listQuery.size"
+      :key="key"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
 
-    <el-dialog title="绩效" :visible.sync="dialogVisible">
+
+    <el-dialog title="添加数据" :visible.sync="dialogVisible">
 <!--      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="90px"-->
 <!--               style="width: 400px; margin-left:50px;">-->
 <!--        <el-form-item v-for="item in tableHeader" label="item" prop="item">-->
@@ -48,7 +59,13 @@ export default {
       show:false,
       dataForm:undefined,
       dialogVisible:false,
-      temp:undefined
+      temp:undefined,
+      listQuery:{
+        num:1,
+        size:50,
+      },
+      total: 0,
+      key:false
 
     }
   },
@@ -139,10 +156,12 @@ export default {
     getList() {
       this.listLoading = false
       var vm = this
-      getTableData(this.$route.params.id).then(response => {
+      getTableData(this.$route.params.id,this.listQuery.num,this.listQuery.size).then(response => {
 
         vm.tableData = response.data.items
+        vm.total = response.data.total
         console.log('vm tabledata' + vm.tableData)
+        console.log('vm total' + vm.total)
         // this.list = response.data.items
         // console.log(this.list)
         // this.total = response.data.total
@@ -153,6 +172,18 @@ export default {
           this.listLoading = false
         }, 1.5 * 1000)
       })
+
+      this.key = !this.key
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.listQuery.size  = val
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.listQuery.num  = val
+      this.getList()
     }
 
   }

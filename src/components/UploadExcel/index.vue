@@ -88,22 +88,22 @@ export default {
 
     },
     readerData(rawFile) {
-      this.loading = true
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = e => {
-          const data = e.target.result
-          const workbook = XLSX.read(data, { type: 'array' })
-          const firstSheetName = workbook.SheetNames[0]
-          const worksheet = workbook.Sheets[firstSheetName]
-          const header = this.getHeaderRow(worksheet)
-          const results = XLSX.utils.sheet_to_json(worksheet)
-          this.generateData({ header, results })
-          this.loading = false
-          resolve()
-        }
-        reader.readAsArrayBuffer(rawFile)
-      })
+      // this.loading = true
+      // return new Promise((resolve, reject) => {
+      //   const reader = new FileReader()
+      //   reader.onload = e => {
+      //     const data = e.target.result
+      //     const workbook = XLSX.read(data, { type: 'array' })
+      //     const firstSheetName = workbook.SheetNames[0]
+      //     const worksheet = workbook.Sheets[firstSheetName]
+      //     const header = this.getHeaderRow(worksheet)
+      //     const results = XLSX.utils.sheet_to_json(worksheet)
+      //     this.generateData({ header, results })
+      //     this.loading = false
+      //     resolve()
+      //   }
+      //   reader.readAsArrayBuffer(rawFile)
+      // })
     },
     getHeaderRow(sheet) {
       const headers = []

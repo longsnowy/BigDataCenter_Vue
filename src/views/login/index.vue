@@ -143,24 +143,24 @@ export default {
         this.$refs.password.focus()
       })
     },
-    // changeCaptchaUrl: function() {
-    //   var vm = this
-    //   this.axios({
-    //     method: 'get',
-    //     url: 'http://localhost:8080/Spring_Web_exploded/getcode',
-    //     responseType: 'blob'
-    //     //headers: {'Access-Token': vm.token}
-    //   }).then(function(response) {
-    //     var img = vm.$refs.codeImg
-    //     let url = window.URL.createObjectURL(response.data)
-    //     img.src = url
-    //     //取得后台通过响应头返回的sessionId的值
-    //     vm.loginForm.token = response.headers['access-token']
-    //     // console.log(response.headers)
-    //     // console.log('function111' + vm.loginForm.token)
-    //   })
-    //   // console.log(vm.token)
-    // },
+    changeCaptchaUrl: function() {
+      var vm = this
+      this.axios({
+        method: 'get',
+        url: 'http://localhost:8080/Spring_Web_exploded/getcode',
+        responseType: 'blob'
+        //headers: {'Access-Token': vm.token}
+      }).then(function(response) {
+        var img = vm.$refs.codeImg
+        let url = window.URL.createObjectURL(response.data)
+        img.src = url
+        //取得后台通过响应头返回的sessionId的值
+        vm.loginForm.token = response.headers['access-token']
+        // console.log(response.headers)
+        // console.log('function111' + vm.loginForm.token)
+      })
+      // console.log(vm.token)
+    },
     handleLogin() {
       var vm = this;
       this.$refs.loginForm.validate(valid => {

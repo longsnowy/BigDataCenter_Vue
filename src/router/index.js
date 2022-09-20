@@ -78,6 +78,7 @@ export const constantRoutes = [
     ]
   },
 
+
   {
     path: '/',
     component: Layout,
@@ -89,6 +90,19 @@ export const constantRoutes = [
         component: () => import('@/views/data/tableRela'),
         name: '表关联分析',
         meta: { title: '表关联分析', icon: 'excel', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/tableTree',
+    children: [
+      {
+        path: '/tableTree',
+        component: () => import('@/views/data/tableTree'),
+        name: '树状表字段',
+        meta: { title: '树状表字段', icon: 'excel', affix: true }
       }
     ]
   },
@@ -107,6 +121,40 @@ export const constantRoutes = [
     ]
   },
 
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: '/newsindex',
+  //   children: [
+  //     {
+  //       path: 'newsindex',
+  //       component: () => import('@/views/news/newsIndex'),
+  //       name: '新闻分类',
+  //       meta: { title: '新闻分类', icon: 'excel', affix: true }
+  //     },
+  //     {
+  //       path: '/newslist/:tablename',
+  //       component: () => import('@/views/news/newsList'),
+  //       name: '新闻列表',
+  //       meta: { title: '新闻列表', icon: 'excel', affix: true },
+  //       hidden: true
+  //     },
+  //     {
+  //       path: '/newschart',
+  //       component: () => import('@/views/news/newsChart'),
+  //       name: '新闻图表',
+  //       meta: { title: '新闻图表', icon: 'excel', affix: true },
+  //       hidden: true
+  //     }, {
+  //       path: '/wordcloud',
+  //       component: () => import('@/views/news/WordCloud'),
+  //       name: '词云图',
+  //       meta: { title: '词云图', icon: 'excel', affix: true },
+  //       hidden: true
+  //     }
+  //   ]
+  // },
+
   {
     path: '/',
     component: Layout,
@@ -122,6 +170,47 @@ export const constantRoutes = [
     ]
   },
 
+
+  {
+    path: '/dataclean',
+    component: Layout,
+    redirect: '/dataclean/nullsearch',
+    name: 'nullsearch',
+    meta: {
+      title: '数据加工',
+      icon: 'excel'
+    },
+    children: [
+      {
+        path: '/nullsearch',
+        component: () => import('@/views/data/nullSearch'),
+        name: 'nullsearch',
+        meta: { title: '空值填充' }
+      }, {
+        path: '/jsonupdate',
+        component: () => import('@/views/data/jsonUpdate'),
+        name: 'jsonupdate',
+        meta: { title: 'json数据转换' }
+      }, {
+        path: '/repedelete',
+        component: () => import('@/views/data/repeDelete'),
+        name: 'repedelete',
+        meta: { title: '重复值去除' }
+      },{
+        path: '/dateupdate',
+        component: () => import('@/views/data/dateUpdate'),
+        name: 'dateupdate',
+        meta: { title: '日期格式转换' }
+      },{
+        path: '/deletedata',
+        component: () => import('@/views/data/deleteData'),
+        name: 'deletedata',
+        meta: { title: '数据筛选' }
+      }
+    ]
+  },
+
+
   {
     path: '/excel',
     component: Layout,
@@ -129,7 +218,7 @@ export const constantRoutes = [
     name: 'excel',
     meta: {
       title: 'Excel',
-      icon: 'excel',
+      icon: 'excel'
     },
     hidden: true,
     children: [
@@ -168,7 +257,12 @@ export const constantRoutes = [
         component: () => import('@/views/data/tableData'),
         name: 'tabledata',
         meta: { title: '表数据管理' }
-      },{
+      }, {
+        path: '/dataclean/:id',
+        component: () => import('@/views/data/dataClean'),
+        name: 'dataclean',
+        meta: { title: '数据清洗' }
+      },  {
         path: '/tabledic/:id',
         component: () => import('@/views/data/tableDic'),
         name: 'tabledic',
@@ -217,7 +311,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
 
   {
     path: '/theme',

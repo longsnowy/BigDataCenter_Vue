@@ -65,6 +65,7 @@
       <el-table-column label="选项" align="center" width="260" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="push(row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="pushClean(row)">清洗</el-button>
 <!--          <el-button type="primary" size="mini" @click="userPasss(row)">用户名密码</el-button>-->
           <el-button v-if="row.status!='删除'" size="mini" @click="handleDelete(row,$index)">删除</el-button>
         </template>
@@ -197,8 +198,7 @@ import {
   deletePerson,
   updatePerson,
   updatUser,
-  getPerformanceById,
-  fetchPv
+  getPerformanceById
 } from '@/api/user-admin'
 
 import {
@@ -235,15 +235,11 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        // limit: 20,
-        // sort: '绩效降序',
-
         name: '',
         sex: '',
         department: '',
         page: 1,
-        num: 20
-
+        num: 200
       },
       performance: '111',
       sexs: ['男', '女'],
@@ -388,6 +384,9 @@ export default {
 
     push(row){
       this.$router.push('/tabledata/' + row.id)
+    },
+    pushClean(row){
+      this.$router.push('/dataclean/' + row.id)
     },
 
     handleFilter() {
